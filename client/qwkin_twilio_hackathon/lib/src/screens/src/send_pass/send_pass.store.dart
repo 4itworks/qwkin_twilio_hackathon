@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:qwkin_twilio_hackathon/src/usecases/usecases.dart';
 
 part 'send_pass.store.g.dart';
 
@@ -19,8 +20,27 @@ abstract class _SendPassStore with Store {
   @observable
   var condominiumController = TextEditingController();
 
-  @action
-  void toggleFilterExpansionPanel(_, bool isExpanded) {
+  @observable
+  var isSendingPass = false;
 
+  @action
+  Future<bool> sendPass() async {
+    isSendingPass = true;
+
+    try {
+      await sendPassUseCase(
+        phoneNumber: phoneController.text,
+        unitNumber: unitController.text,
+        condoName: condominiumController.text,
+        guestName: guestController.text,
+      );
+      isSendingPass = false;
+      return true;
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+
+    isSendingPass = false;
+    return false;
   }
 }

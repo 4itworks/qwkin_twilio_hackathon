@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qwkin_twilio_hackathon/src/extensions/extensions.dart';
 import 'package:qwkin_twilio_hackathon/src/screens/src/send_pass/send_pass.store.dart';
-import 'package:qwkin_twilio_hackathon/src/widgets/src/customer_list_tile/customer_list_tile.widget.dart';
-import 'package:qwkin_twilio_hackathon/src/widgets/src/filter/filter.dart';
-import 'package:qwkin_twilio_hackathon/src/widgets/src/pass_information_bottomsheet/pass_information_bottomsheet.widget.dart';
-import 'package:qwkin_twilio_hackathon/src/widgets/src/pass_information_bottomsheet/pass_information_list_tile.widget.dart';
 import 'package:qwkin_twilio_hackathon/src/widgets/src/standard_text_field/standard_text_field.widget.dart';
 import 'package:qwkin_twilio_hackathon/src/widgets/widgets.dart';
 
@@ -29,11 +24,11 @@ class SendPassState extends State<SendPass> {
                 children: [
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Title('Send Pass').marginOnly(bottom: 20),
+                        const Title('Send Pass').marginOnly(bottom: 20),
                         Column(
                           children: [
                             StandardTextField(
@@ -59,10 +54,24 @@ class SendPassState extends State<SendPass> {
                     ),
                   ).marginOnly(bottom: 15),
                   DefaultCard(
-                    child: DefaultButton(
-                      title: 'SEND PASS',
-                      onTap: () {},
-                    ),
+                    child: store.isSendingPass
+                        ? const CircularProgressIndicator()
+                        : DefaultButton(
+                            title: 'SEND PASS',
+                            onTap: () async {
+                              late final String snackBarMessage;
+
+                              final success = await store.sendPass();
+
+                              snackBarMessage = success
+                                  ? 'Pass sent successfully'
+                                  : 'Pass not sent';
+
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(snackBarMessage)));
+                            },
+                          ),
                   ),
                 ],
               );

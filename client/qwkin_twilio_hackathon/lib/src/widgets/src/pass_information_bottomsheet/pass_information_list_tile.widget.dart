@@ -1,18 +1,15 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart' hide Title;
+import 'package:qwkin_twilio_hackathon/src/models/models.dart';
 import 'package:qwkin_twilio_hackathon/src/widgets/widgets.dart';
 
 class PassInformationListTile extends StatelessWidget {
-  final String title;
-  final String description;
   final BorderRadius? borderRadius;
   final VoidCallback? onTap;
+  final Pass pass;
 
   const PassInformationListTile({
     Key? key,
-    required this.description,
-    required this.title,
+    required this.pass,
     this.borderRadius,
     this.onTap,
   }) : super(key: key);
@@ -34,8 +31,8 @@ class PassInformationListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Title('João Carlos'),
-                  Text('105 - São Gabriel'),
+                  Title(pass.guestName!),
+                  Text('${pass.unitNumber} ${pass.condoName}'),
                 ],
               ),
             ),

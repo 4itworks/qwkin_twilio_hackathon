@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qwkin_twilio_hackathon/src/extensions/extensions.dart';
+import 'package:qwkin_twilio_hackathon/src/models/models.dart';
 import 'package:qwkin_twilio_hackathon/src/widgets/src/customer_information_bottomsheet/customer_information_list_tile.widget.dart';
 
 import '../../widgets.dart';
@@ -7,11 +8,13 @@ import '../../widgets.dart';
 class PassInformationBottomSheet extends StatelessWidget {
   final VoidCallback? onCheckInPressed;
   final bool isLoading;
+  final Pass pass;
 
   const PassInformationBottomSheet({
     Key? key,
     this.onCheckInPressed,
     this.isLoading = false,
+    required this.pass,
   }) : super(key: key);
 
   @override
@@ -44,27 +47,27 @@ class PassInformationBottomSheet extends StatelessWidget {
               children: [
                 CustomerInformationListTile(
                   title: 'Guest Name',
-                  description: 'João Carlos',
+                  description: pass.guestName!,
                 ).marginSymmetric(vertical: 1),
                 CustomerInformationListTile(
                   title: 'Phone Number',
-                  description: '105',
+                  description: pass.phoneNumber!,
                 ).marginSymmetric(vertical: 1),
                 CustomerInformationListTile(
                   title: 'Unit',
-                  description: 'São Gabriel',
+                  description: pass.unitNumber!,
                 ).marginSymmetric(vertical: 1),
                 CustomerInformationListTile(
                   title: 'Condominium',
-                  description: 'Alian',
+                  description: pass.condoName!,
                 ).marginOnly(bottom: 15),
                 DefaultCard(
                   child: isLoading
                       ? const CircularProgressIndicator()
                       : DefaultButton(
-                    title: 'CHECK-IN',
-                    onTap: onCheckInPressed,
-                  ),
+                          title: 'CHECK-IN',
+                          onTap: onCheckInPressed,
+                        ),
                 ),
               ],
             ),

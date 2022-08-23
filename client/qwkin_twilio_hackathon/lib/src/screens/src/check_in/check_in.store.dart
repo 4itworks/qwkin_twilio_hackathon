@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:qwkin_twilio_hackathon/src/screens/screens.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:qwkin_twilio_hackathon/src/models/models.dart';
+import 'package:qwkin_twilio_hackathon/src/usecases/src/fetch_passes.usecase.dart';
 import 'package:qwkin_twilio_hackathon/src/usecases/usecases.dart';
 
 part 'check_in.store.g.dart';
@@ -10,20 +12,36 @@ class CheckInStore = _CheckInStore with _$CheckInStore;
 
 abstract class _CheckInStore with Store {
   @observable
-  var isLoadingCheckIn = false;
+  var isFetchingPasses = false;
+
+  @observable
+  var passes = <Pass>[];
+
+  @observable
+  var refreshController = RefreshController(initialRefresh: false);
+
 
   @action
-  Future<void> checkIn(BuildContext context) async {
-    isLoadingCheckIn = true;
-
+  Future<bool> checkIn() async {
     try {
-      final test = await checkInUseCase();
+      await checkInUseCase();
+      return true;
     } catch (error) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('teste')));
       debugPrint(error.toString());
     }
 
-    isLoadingCheckIn = false;
+    return false;
+  }
+
+  @action
+  Future<void> onRefresh() async{
+    await fetchPasses();
+    refreshController.refreshCompleted();
+  }
+
+  Future<void> fetchPasses() async {
+    isFetchingPasses = true;
+    passes = await fetchPassesUseCase();
+    isFetchingPasses = false;
   }
 }

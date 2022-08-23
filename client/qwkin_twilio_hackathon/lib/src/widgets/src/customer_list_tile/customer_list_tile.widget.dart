@@ -1,26 +1,39 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
+import 'package:qwkin_twilio_hackathon/src/models/models.dart';
 import 'package:qwkin_twilio_hackathon/src/widgets/src/customer_information_bottomsheet/customer_information_bottomsheet.widget.dart';
 
+import '../../widgets.dart';
+
 class CustomerListTile extends StatelessWidget {
-  const CustomerListTile({Key? key}) : super(key: key);
+  final Rate rate;
+
+  const CustomerListTile({
+    Key? key,
+    required this.rate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         showModalBottomSheet<void>(
           context: context,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
-          backgroundColor: Color(0xFFEEEEEE),
+          backgroundColor: const Color(0xFFEEEEEE),
           builder: (BuildContext context) {
-            return CustomerInformationBottomSheet();
+            return CustomerInformationBottomSheet(
+              rate: rate,
+            );
           },
         );
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 20,
+        ),
         color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,16 +41,12 @@ class CustomerListTile extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'João Carlos (5)',
-                  style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Title(
+                  '${rate.name} (${rate.score.toString()})',
                 ),
-                Text('104 - São Gabriel'),
-                Text('by Alian'),
-                Text('at front gate'),
+                Text('${rate.unitNumber} - ${rate.condoName}'),
+                Text('by ${rate.staffName}'),
+                Text('at ${rate.gateName}'),
               ],
             ),
             Image.asset('assets/arrow.png')
